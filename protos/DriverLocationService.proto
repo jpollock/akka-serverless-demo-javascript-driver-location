@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+import "cloudstate/entity_key.proto";
+import "cloudstate/eventing.proto";
+import "google/api/annotations.proto";
+
+
+package driverlocation;
+
+// gRPC definition for Driver Location
+
+
+service DriverLocationService { 
+
+    // Add will create and update
+    rpc SetDriverLocation (SetDriverLocationRequest) returns (DriverData) {}
+    rpc SetDriverOnRide (SetDriverOnRideRequest) returns (DriverData) {}
+    rpc GetDriver (GetDriverRequest) returns (DriverData) {}
+    rpc GetDriverDistance (GetDriverDistanceRequest) returns (DriverDistance) {}
+    
+}
+
+message SetDriverLocationRequest { 
+    string driverId = 1 [(.cloudstate.entity_key) = true];
+    string name =  2; 
+    string car = 3;
+    Location location = 4;  
+    float speed = 5;
+    float heading = 6;
+}
+
+message GetDriverRequest {
+    string driverId = 1 [(.cloudstate.entity_key) = true];
+}
+
+message SetDriverOnRideRequest {
+    string driverId = 1 [(.cloudstate.entity_key) = true];
+    bool onRide = 2;
+}
+
+message GetDriverDistanceRequest {
+    string driverId = 1 [(.cloudstate.entity_key) = true];
+    Location location = 2;
+}
+
+message DriverData {
+    string name =  1; 
+    string car = 2;
+    float speed = 3;
+    float heading = 4;
+    Location location = 5; 
+    bool onRide = 6;
+}
+
+message Location {
+  float latitude  = 1;
+  float longitude = 2;
+}
+
+message DriverDistance {
+    float miles = 1;
+}

@@ -1,0 +1,26 @@
+{
+  "name": "js-driverlocation",
+  "version": "0.0.2",
+  "description": "Simple driver location app for Akka Serverless",
+  "main": "index.js",
+  "scripts": {
+    "build": "compile-descriptor ../protos/DriverLocationService.proto",
+    "start": "node index.js",
+    "dockerbuild": "docker build . -t ${DOCKER_USER:-jpollock}/driverlocation:$npm_package_version",
+    "dockerpush": "docker push ${DOCKER_USER:-jpollock}/driverlocation:$npm_package_version",
+    "akkaslsdeploy": "akkasls svc deploy driverlocation docker.io/${DOCKER_USER:-jpollock}/driverlocation:$npm_package_version",
+    "akkaslsexpose": "akkasls svc expose driverlocation --enable-cors",
+    "akkaslslocalstart": "docker run -d --name driverlocation -p 8080:8080 ${DOCKER_USER:-jpollock}/driverlocation:$npm_package_version && docker run -d --name proxy -p 9000:9000 --env USER_FUNCTION_HOST=${CURRENT_IP:-host.docker.internal} cloudstateio/cloudstate-proxy-dev-mode:latest",
+    "akkaslslocalstop": "docker stop driverlocation && docker rm driverlocation && docker stop proxy && docker rm proxy"
+  },
+  "author": "Jeremy Pollock",
+  "license": "Apache License 2.0",
+  "engineStrict": true,
+  "engines": {
+    "node": "~12"
+  },
+  "dependencies": {
+    "cloudstate": "0.0.3",
+    "minimist": ">=0.2.1"
+  }
+}
