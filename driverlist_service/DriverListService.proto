@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "cloudstate/entity_key.proto";
+import "cloudstate/eventing.proto";
+import "google/api/annotations.proto";
+
+
+package driverlist;
+
+// gRPC definition for Driver List Service
+
+
+service DriverListService { 
+
+    // Add will create and update
+    rpc AddDriver (AddDriverRequest) returns (DriverListCount) {
+        option (google.api.http) = {
+            post: "/driverList/{driverListId}",
+            body: "*"
+        };   
+    }
+
+    rpc UpdateDriver (UpdateDriverRequest) returns (DriverListCount) {
+        option (google.api.http) = {
+            put: "/driverList/{driverListId}",
+            body: "*"
+        };   
+    }
+
+    rpc RemoveDriver (RemoveDriverRequest) returns (DriverListCount) {
+        option (google.api.http) = {
+            delete: "/driverList/{driverListId}"
+        };   
+    }
+
+    rpc GetDriverList (GetDriverListRequest) returns (DriverList) {
+        option (google.api.http) = {
+            get: "/driverList/{driverListId}"
+        };   
+    }
+}
+
+
+message AddDriverRequest { 
+    string driverListId = 1 [(.cloudstate.entity_key) = true];
+    string driverId =  2;
+    Location driverBaseLocation =  3;
+    Location currentLocation =  4;
+}
+
+message UpdateDriverRequest { 
+    string driverListId = 1 [(.cloudstate.entity_key) = true];
+    string driverId =  2;
+    Location currentLocation =  3;
+}
+
+message RemoveDriverRequest { 
+    string driverListId = 1 [(.cloudstate.entity_key) = true];
+    string driverId =  2;
+}
+
+message GetDriverListRequest {
+    string driverListId = 1 [(.cloudstate.entity_key) = true];
+}
+
+message DriverListCount {
+    int32 count = 1;
+}
+
+message DriverList {
+    repeated Driver drivers = 1;
+}
+
+message Driver {
+    string driverId = 1;
+    Location driverBaseLocation =  2;
+    Location currentLocation =  3;
+}
+
+message Location {
+  float latitude  = 1;
+  float longitude = 2;
+}

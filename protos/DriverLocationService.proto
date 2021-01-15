@@ -13,10 +13,32 @@ package driverlocation;
 service DriverLocationService { 
 
     // Add will create and update
-    rpc SetDriverLocation (SetDriverLocationRequest) returns (DriverData) {}
-    rpc SetDriverOnRide (SetDriverOnRideRequest) returns (DriverData) {}
-    rpc GetDriver (GetDriverRequest) returns (DriverData) {}
-    rpc GetDriverDistance (GetDriverDistanceRequest) returns (DriverDistance) {}
+    rpc SetDriverLocation (SetDriverLocationRequest) returns (DriverData) {
+        option (google.api.http) = {
+            post: "/driverLocations/{driverId}",
+            body: "*"
+        };        
+    }
+    rpc SetDriverOnRide (SetDriverOnRideRequest) returns (DriverData) {
+        option (google.api.http) = {
+            post: "/driverLocations/{driverId}/rideStatus",
+            body: "*"
+        };    
+    }
+
+    rpc GetDriver (GetDriverRequest) returns (DriverData) {
+        option (google.api.http) = {
+            get: "/driverLocations/{driverId}",
+            body: "*"
+        };
+    }
+    
+    rpc GetDriverDistance (GetDriverDistanceRequest) returns (DriverDistance) {
+        option (google.api.http) = {
+            get: "/driverDistance/{productdriverIdID}",
+            body: "*"
+        };
+    }
     
 }
 
